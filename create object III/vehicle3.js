@@ -21,19 +21,30 @@
 //   }
 // }
 function VehicleConstructor(name,numwheel,numpass,speed){
+  var chars="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   this.distance_travelled=0;
-  this.name=name;
-  this.numwheel=numwheel;
-  this.numpass=numpass;
+  this.name=name || vehicel;
+  this.numwheel=numwheel || 1;
+  this.numpass=numpass || 0;
   this.speed=speed;
-  this.VIN=Math.floor((Math.random() * 100000000) + 50000000);
-  this.updateDistanceTravelled=function(){
-    this.distance_travelled+=speed;
+  // this.VIN=Math.floor((Math.random() * 100000000) + 50000000);
+  this.VIN=createvin();
+  function createvin(){
+    var vin='';
+    for (var i=0;i<17;i++){
+      vin+=chars[Math.floor(Math.random()*35)];
+    }
+    return vin;
   }
   if (!(this instanceof VehicleConstructor)) {
      // the constructor was called without "new".
      return new VehicleConstructor(name,numwheel,numpass,speed);
    }
+}
+
+VehicleConstructor.prototype.updateDistanceTravelled=function(){
+  this.distance_travelled+=this.speed;
+  return this;
 }
 VehicleConstructor.prototype.makeNoise=function() {
   console.log(`this is makenoise fun of ${this.name}`);
