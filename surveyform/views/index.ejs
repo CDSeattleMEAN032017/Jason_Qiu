@@ -1,0 +1,75 @@
+<html>
+<head>
+  <style>
+    #wrapper{
+      margin: auto;
+      width: 970px;
+      text-align: center;
+    }
+    label{
+      position: absolute;
+      left:30%;
+      margin: 5px;
+    }
+    input[type='text']{
+      margin: 5px;
+      width: 150px;
+    }
+    select{
+      margin: 5px;
+      width: 150px;
+    }
+    textarea{
+      margin-top:  15px;
+    }
+    input[type='submit']{
+      margin: 10px;
+      position: relative;
+      left: 220px;
+    }
+    .error{
+      color: red;
+      font-size: 20pt;
+      font-weight: bold;
+    }
+  }
+  </style>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+ <script type="text/javascript"> // src="jqfunction.js"
+   $('document').ready(function(){
+     $('input[type=text]').focus(function(){
+       $(this).val("");
+     });
+   });
+ </script>
+
+</head>
+  <body>
+    <div id="wrapper">
+      <fieldset>
+        <legend>Please input your information</legend>
+        <form class="" action="/result" method="post">
+          <label for="">Your name:</label>
+          <input type="text" name="name" value="New name"></br>
+          <label for="">Dojo Locaiton</label>
+          <select name="location">
+            <option value=""></option>
+            <option value="Seattle">Seattle</option>
+            <option value="San Jose">San Jose</option>
+            <option value="DC">Washingtong DC</option>
+          </select></br>
+          <label for="">Favorite Language</label>
+          <select name="language">
+            <option value="Python">Python</option>
+            <option value="Javascript">Javascript</option>
+            <option value="C#">C#</option>
+            <option value="PHP">PHP</option>
+          </select></br>
+          <label for="">Comments (optional)</label></br>
+          <textarea name="comment" rows="8" cols="80"></textarea></br>
+          <input type="submit" name="submit" value="submit">
+        </form>
+      </fieldset>
+    </div>
+  </body>
+</html>
