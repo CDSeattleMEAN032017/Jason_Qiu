@@ -1,0 +1,163 @@
+<html>
+<head>
+<style media="screen">
+/** {outline: 2px dotted rgb(231,30,38);}*/
+  h1{
+    display: inline-block;
+    width: 40%;
+  }
+  h5,h6{
+    margin-top: 5px;
+    margin-bottom: 5px;
+  }
+  a{
+    /*position: relative;
+    left: 20%;*/
+  }
+  body{
+    padding-left: 5%;
+    width: 900px;
+  }
+  #header{
+    width: 100%;
+  }
+  #main{
+    width: 80%;
+    margin-left: 5%;
+    position: relative;
+  }
+  .commentblock{
+    margin-top: -30px;
+    margin-left: 20px;
+    position: relative;
+  }
+  label{
+    margin: 10px;
+    margin-top: 10px;
+  }
+  .error{
+    color: red;
+    font-size: 14pt;
+    font-weight: bold;
+    margin-bottom: 0;
+  }
+  .error1{
+    color: red;
+    font-size: 12pt;
+    font-weight: bold;
+    margin-bottom: 0;
+    display: inline;
+  }
+  textarea{
+    width: 100%;
+    position: relative;
+  }
+  #postform{
+    width: 100%;
+    margin-bottom: 20px;
+    position: relative;
+    height: 170px;
+  }
+  .commentform{
+    width: 100%;
+    position: relative;
+    height: 110px;
+  }
+  .postpost{
+    background-color: blue;
+    color: white;
+    /*margin-top: 10px;*/
+    margin-bottom: 10px;
+    position: absolute;
+    right:0;
+  }
+  .postcomment{
+    background-color: green;
+    color: white;
+    /*margin-top: 10px;*/
+    margin-bottom: 10px;
+    position: absolute;
+    right:0;
+  }
+  .post{
+    margin-left: 10px;
+    text-indent: 0px;
+  }
+  .comment{
+    margin: 5px 0 10px 0;
+    text-indent: -10px;
+  }
+
+</style>
+</head>
+  <body>
+    <div id="header">
+      <% if(typeof(errors) != 'undefined' ) { %>
+          <% for (var x in errors) { %>
+            <% if (x=='name') { %>
+              <p class='error'><%= errors[x].post %></p>
+            <% } %>
+          <% } %>
+      <% } %>
+      <h1>The dojo post board</h1>
+    </div>
+    <hr>
+    <div id="main">
+    <!-- with all the data we can then construct a more structured output -->
+    <form id="postform" action="/posts" method="post">
+      <h5>Name:</h5>
+      <input type="text" name="name" value="">
+      <% if(typeof(errors) != 'undefined' ) { %>
+          <% for (var x in errors) { %>
+            <% if (x=='name') { %>
+              <p class='error1'><%= errors[x].message %></p>
+            <% } %>
+          <% } %>
+      <% } %>
+      <h5>Messages:</h5>
+      <textarea name="text" rows="6" ></textarea>
+      <% if(typeof(errors) != 'undefined' ) { %>
+          <% for (var x in errors) { %>
+            <% if (x=='text') { %>
+              <p class='error1'><%= errors[x].message %></p>
+            <% } %>
+          <% } %>
+      <% } %></br>
+      <input class="postpost" type="submit" name="" value="Post a message">
+    </form>
+    <% if (posts) { %>
+      <% for (var i=0;i<posts.length;i++) { %>
+          <h4>Name:&nbsp<%= posts[i].name %>&nbsp-&nbsp<%= posts[i].create_at %></h4>
+          <h4>Message:&nbsp<%= posts[i].text %></h4></br>
+          <div class="commentblock">
+            <% for (var j=0;j<posts[i].comments.length;j++) { %>
+                <h5>&nbsp<%= posts[i].comments[j].commer %>&nbsp-&nbsp<%= posts[i].comments[j].create_at %></h6>
+                <h5 class='comment'>&nbsp&nbsp&nbsp<%=posts[i].comments[j].comment%></h5>
+            <% } %>
+            <form class="commentform" action="/posts/<%= posts[i]._id %>" method="post">
+              <h6>Name:</h6>
+              <input type="text" name="commer" value="">
+              <% if(typeof(errors) != 'undefined' ) { %>
+                  <% for (var x in errors) { %>
+                    <% if (x=='commer' && posts[i]._id==postid ) { %>
+                      <p class='error1'><%= errors[x].message %></p>
+                    <% } %>
+                  <% } %>
+              <% } %></br></br>
+              <h6>Post a comment</h6>
+              <textarea name="comment" rows="2" ></textarea>
+              <% if(typeof(errors) != 'undefined' ) { %>
+                  <% for (var x in errors) { %>
+                    <% if (x=='comment' && posts[i]._id==postid) { %>
+                      <p class='error1'><%= errors[x].message %></p>
+                    <% } %>
+                  <% } %>
+              <% } %></br>
+              <input class="postcomment" type="submit" name="" value="Post a comment">
+            </form></br>
+          </div>
+      <% } %>
+    <% } %>
+    </div>
+  </body>
+</html>
