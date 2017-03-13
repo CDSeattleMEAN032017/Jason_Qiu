@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <h1>Here are the awesome quotes!</h1>
+    <% if (error){ %>
+      <p><%= error[info]%></p>
+    <% } %>
+    <% if (quotes) { %>
+      <ul>
+        <% for (var i=0;i<quotes.length;i++){ %>
+          <li>
+            <p><%= quotes[i].quote %></p>
+            <blockquote cite="http://">
+              -&nbsp<%= quotes[i].name %>&nbsp at &nbsp<%= quotes[i].create_at%></td>
+            </blockquote>
+            <hr>
+          </li>
+        <% } %>
+      </ul>
+    <% } %>
+  </body>
+</html>
