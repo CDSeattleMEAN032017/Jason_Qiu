@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <style media="screen">
+      /** {outline: 2px dotted rgb(231,30,38);}*/
+    fieldset{
+      display: inline-block;
+      margin:5%;
+      padding-bottom: 30px;
+      padding: 30px;
+      width: 70%;
+      border-radius: 5px;
+      border: 1px dashed silver;
+      position: relative;
+      vertical-align: top;
+    }
+    legend{
+      font-size: 18pt;
+      font-weight: bold;
+      text-align: left;
+    }
+    label{
+      position: absolute;
+      left: 5%;
+      margin: 10px 5px 10px 5px;
+    }
+    input[type='text']{
+      width: 150px;
+      position: relative;;
+      left: 20%;
+      margin: 5px;
+    }
+    select{
+      width: 150px;
+      position: relative;;
+      left: 20%;
+      margin: 5px;
+    }
+    #addbutton{
+      margin-top: 10px;
+      position: relative;
+      left: 30%;
+    }
+    table{
+      border: 1px solid black;
+      padding: 0;
+      border-collapse: collapse;
+      position: relative;
+      left: 20px;
+      top: 20px;
+      margin:20px,0,0,20px;
+    }
+    td{
+      /*border: 1px solid black;*/
+      padding: 5px;
+      margin:0;
+      border-left: 1px solid black;
+      border-rigth: 1px solid black;
+    }
+    th{
+      /*border: 1px solid black;*/
+      padding: 5px;
+      margin:0;
+      border-left: 1px solid black;
+      border-rigth: 1px solid black;
+      background-color: silver;
+    }
+    tr:nth-child(even) {background: #EEE}
+    tr:nth-child(odd) {backgroun
+    </style>
+    <script src="node_modules/angular/angular.js" charset="utf-8"></script>
+    <script type="text/javascript">
+      var app=angular.module('myApp',[]);
+      app.controller('bodyController',['$scope',function ($scope) {
+        $scope.users = [{firstname:'Jason',lastname:'Qiu',language:0}];
+        $scope.languages=['Python','CSS','Javascript','Ruby','PHP','C#'];
+        $scope.add=function(){
+          // newuser.language=languages[lanindex];
+          console.log($scope.newuser);
+          $scope.users.push($scope.newuser);
+          console.log($scope.users);
+          $scope.newuser={};
+        }
+        $scope.delete=function(index){
+          console.log(index);
+          $scope.users.splice(index,1);
+          console.log($scope.users);
+        }
+      }])
+    </script>
+  </head>
+  <body ng-controller="bodyController">
+    <fieldset>
+      <legend>Users Controller</legend>
+    <label for="">First Name</label>
+    <input type="text" name="" value="" ng-model="newuser.firstname"><br><br>
+    <label for="">Last Name</label>
+    <input type="text" name="" value="" ng-model="newuser.lastname"><br><br>
+    <label for="">Language:</label>
+    <select class="" name="" ng-model="newuser.language">
+      <option ng-repeat="lan in languages track by $index" value="{{$index}}">{{lan}}</option>
+    </select>
+    <button id='addbutton' type="button" name="button" ng-click="add()">Create User</button><br><br>
+    <table>
+      <tr><th>First Name</th><th>Last Name</th><th>Fav Language</th><th>Actions</th></tr>
+      <tr ng-repeat="user in users track by $index">
+        <!-- <td>{{$index}}</td> -->
+        <td>{{user.firstname}}</td>
+        <td>{{user.lastname}}</td>
+        <td>{{languages[user.language]}}</td>
+        <td><button type="button" name="button" ng-click=delete($index)>Delete User</button></td>
+      </tr>
+    </table>
+    </fieldset>
+  </body>
+</html>
