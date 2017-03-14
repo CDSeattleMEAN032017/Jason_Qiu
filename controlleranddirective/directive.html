@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <script src="node_modules/angular/angular.js" charset="utf-8"></script>
+    <script type="text/javascript">
+      var app=angular.module('myApp',[]);
+      app.controller('bodyController',['$scope',function ($scope) {
+        $scope.filter = [];
+        $scope.add=function(){
+          console.log($scope.newfood);
+          $scope.filter.push($scope.newfood);
+          console.log($scope.filter);
+          $scope.newfood='';
+        }
+      }])
+    </script>
+  </head>
+  <body ng-controller="bodyController">
+    <form class=""  method="post" >
+    <label for="">Favorite Food</label>
+    <input type="text" name="" value="" ng-model="newfood">
+    <button type="button" name="button" ng-click="add()">Add Food</button>
+    <select class="" name="" ng-model="filter">
+      <option ng-repeat="food in filter" value="{{food}}">{{food}}</option>
+    </select>
+    <div id ='model' ng-if = "newfood">
+          <p>Current typing: {{newfood}}</p>
+    </div>
+    </form>
+  </body>
+</html>
