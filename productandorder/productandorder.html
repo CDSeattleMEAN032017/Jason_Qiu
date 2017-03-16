@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="stylesheet" href="style.css">
+    <script src="node_modules/angular/angular.js" charset="utf-8"></script>
+    <script type="text/javascript">
+      var app=angular.module('myApp',[]);
+      app.factory('ProductFactory', function(){
+         var factory = {};
+         var products = [
+           {name:'Pure water',price:1.2,quantity:50},
+           {name:'Rice',price:2.2,quantity:5},
+           {name:'Shirt',price:31.5,quantity:50},
+           {name:'Keyboard', price: 149.99,quantity:50},
+           {name:'Mouse', price: 59.99,quantity:50},
+           {name:'Basketball', price: 21.99,quantity:50}]
+         factory.get=function(callback){
+           callback(products)
+         }
+        //  factory.get=function(){
+        //    return products
+        //  }
+         factory.add = function(newproduct,callback){
+           newproduct.quantity=50
+           products.push(newproduct)
+          //  callback(products)
+          //  console.log(products);
+         }
+         factory.delete = function(protodelete,callback){
+           console.log(protodelete);
+           var index=products.indexOf(protodelete)
+           products.splice(index,1)
+          //  callback(products)
+         }
+         factory.buy=function(protobuy,callback){
+           product=products.find(function(product){
+             return product == protobuy
+           })
+           if(product.quantity>0){
+             product.quantity-=1
+             callback(products)
+             return true
+           } else {
+             return false
+           }
+         }
+         factory.checkquantity=function(productobj){
+           product=products.find(function(product){
+             return product == productobj
+           })
+           if(product.quantity>0){
+             return false
+           } else {
+             return true
+           }
+         }
+         factory.checkInput=function(newproduct){
+          //  console.log(newproduct);
+           if(typeof(newproduct)==='undefined'){
+             return true;
+           }
+           else if (typeof(newproduct.name)==='undefined' ||typeof(newproduct.price)==='undefined' ||newproduct.name ==''||newproduct.price ==''||newproduct.price ==null ){
+             return true;
+           }
+           else{
+             return false;
+           }
+         }
+         return factory;
+      })
+      app.controller('productController',['$scope','ProductFactory',function ($scope,ProductFactory) {
+        // $scope.products = [];
+        $scope.propertyName = 'name';
+        $scope.reverse = false;
+        $scope.regex='/^\d+$/'
+        console.log($scope.regex);
+        $scope.sortBy = function(propertyName) {
+          $scope.reverse = ($scope.propertyName === propertyName) ? !$scope.reverse : true;
+          $scope.propertyName = propertyName;
+        };
+        $scope.add=function(){
+          ProductFactory.add($scope.newproduct,function (data){
+              $scope.products = data;})
+          console.log($scope.newproduct);
+          $scope.newproduct={}
+        };
+        $scope.delete=function(producttodelete){
+          // console.log(producttodelete);
+          ProductFactory.delete(producttodelete,function (data){
+              $scope.products = data;});
+        };
+        ProductFactory.get(function (data){
+            $scope.products = data;
+            console.log($scope.products);
+          });
+        // console.log($scope.products);
+        // $scope.products = ProductFactory.products
+        $scope.checkInput=function(){
+          return ProductFactory.checkInput($scope.newproduct)
+        }
+      }])
+      app.controller('orderController',['$scope','ProductFactory',function ($scope,ProductFactory) {
+        // $scope.products = [];
+        $scope.propertyName = 'name';
+        $scope.reverse = false;
+        $scope.sortBy = function(propertyName) {
+          $scope.reverse = ($scope.propertyName === propertyName) ? !$scope.reverse : true;
+          $scope.propertyName = propertyName;
+        };
+        $scope.buy=function(producttobuy){
+          // console.log(producttodelete);
+          result=ProductFactory.buy(producttobuy,function (data){
+              $scope.products = data;});
+          console.log(result);
+        };
+        ProductFactory.get(function (data){
+            $scope.products = data;
+          });
+        // $scope.products =ProductFactory.get();
+        // console.log($scope.products);
+        $scope.checkquantity=function(product){
+          return ProductFactory.checkquantity(product)
+        }
+      }])
+    </script>
+  </head>
+  <body >
+    <fieldset name='fieldset'  ng-controller="productController">
+      <legend>Users Controller</legend>
+      <form class="" name='form' action="index.html" method="post">
+        <label for="">Product Name</label>
+        <input type="text" name="" value="" ng-model="newproduct.name"><br><br>
+        <label for="">Product Price</label>
+        <input type="number" name='inputprice' value="" ng-model="newproduct.price" min=0 required>
+        <p class="errormessage" ng-hide="form.inputprice.$valid">Please input a valid number</p>
+        <!-- <p>input.$valid = {{form.inputprice.$valid}}</p> -->
+        <!-- <p>input = {{newproduct.price}}</p> -->
+        <button id='addbutton' type="button" name="button" ng-click="add()" ng-Disabled="checkInput()">Add product</button><br><br>
+      </form>
+    <table>
+      <tr>
+        <th>
+        <a ng-click="sortBy('name')">Product Name</a>
+        <span class="sortorder" ng-show="propertyName === 'name'" ng-class="{reverse: reverse}"></span>
+        </th>
+        <th>
+          <a ng-click="sortBy('price')">Product Price</a>
+          <span class="sortorder" ng-show="propertyName === 'price'" ng-class="{reverse: reverse}"></span>
+        </th>
+        <th>Actions</th>
+      </tr>
+      <tr ng-repeat="product in products | filter:newproduct:strict | orderBy:propertyName:reverse track by $index">
+        <!-- <td>{{$index}}</td> -->
+        <td>{{product.name}}</td>
+        <td>{{product.price | currency:"USD $"}}</td>
+        <td><button type="button" name="button" ng-click=delete(product)>Delete Product</button></td>
+      </tr>
+    </table></br></br>
+    <p>Sort by = {{propertyName}}; reverse = {{reverse}}</p>
+    <hr/>
+    <button ng-click="propertyName = null; reverse = false">Set to unsorted</button>
+    <hr/>
+    </fieldset>
+    <fieldset   ng-controller="orderController">
+      <legend>Orders Controller</legend>
+    <table>
+      <tr>
+        <th>
+        <a ng-click="sortBy('name')">Product Name</a>
+        <span class="sortorder" ng-show="propertyName === 'name'" ng-class="{reverse: reverse}"></span>
+        </th>
+        <th>
+          <a ng-click="sortBy('price')">Product Price</a>
+          <span class="sortorder" ng-show="propertyName === 'price'" ng-class="{reverse: reverse}"></span>
+        </th>
+        <th>
+          <a ng-click="sortBy('quantity')">Qty Available</a>
+          <span class="sortorder" ng-show="propertyName === 'quantity'" ng-class="{reverse: reverse}"></span>
+        </th>
+        <th>Actions</th>
+      </tr>
+      <tr ng-repeat="product in products | orderBy:propertyName:reverse ">
+        <!-- <td>{{$index}}</td> -->
+        <td>{{product.name}}</td>
+        <td>{{product.price | currency:"USD $" }}</td>
+        <td>{{product.quantity}}</td>
+        <td><button type="button" name="button" ng-click='buy(product)' ng-Disabled="checkquantity(product)" >Buy</button></td>
+      </tr>
+    </table></br></br>
+    <p>Sort by = {{propertyName}}; reverse = {{reverse}}</p>
+    <hr/>
+    <button ng-click="propertyName = null; reverse = false">Set to unsorted</button>
+    <hr/>
+    </fieldset>
+  </body>
+</html>

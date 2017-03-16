@@ -1,0 +1,83 @@
+/** {outline: 2px dotted rgb(231,30,38);}*/
+.errormessage{
+  color: red;
+  display: inline;
+  position: relative;;
+  left: 20%;
+}
+fieldset{
+display: inline-block;
+margin:1%;
+/*padding-bottom: 10px;*/
+padding: 10px;
+width: 70%;
+border-radius: 5px;
+border: 1px dashed silver;
+position: relative;
+vertical-align: top;
+}
+legend{
+font-size: 18pt;
+font-weight: bold;
+text-align: left;
+}
+label{
+position: absolute;
+left: 5%;
+margin: 10px 5px 10px 5px;
+}
+input[type='text']{
+width: 150px;
+position: relative;;
+left: 20%;
+margin: 5px;
+}
+input[type='number']{
+width: 150px;
+position: relative;;
+left: 20%;
+margin: 5px;
+}
+select{
+width: 150px;
+position: relative;;
+left: 20%;
+margin: 5px;
+}
+#addbutton{
+margin-top: 10px;
+position: relative;
+left: 30%;
+}
+table{
+border: 1px solid black;
+padding: 0;
+border-collapse: collapse;
+position: relative;
+left: 20px;
+top: 20px;
+margin:20px,0,0,20px;
+}
+td{
+/*border: 1px solid black;*/
+padding: 5px;
+margin:0;
+border-left: 1px solid black;
+border-rigth: 1px solid black;
+}
+th{
+/*border: 1px solid black;*/
+padding: 5px;
+margin:0;
+border-left: 1px solid black;
+border-rigth: 1px solid black;
+background-color: silver;
+}
+tr:nth-child(even) {background: #EEE}
+tr:nth-child(odd) {background: #FFF}
+.sortorder:after {
+content: '\25b2';   // BLACK UP-POINTING TRIANGLE
+}
+.sortorder.reverse:after {
+content: '\25bc';   // BLACK DOWN-POINTING TRIANGLE
+}
