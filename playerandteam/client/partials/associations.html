@@ -1,0 +1,26 @@
+<fieldset name='fieldset'  ng-controller="AssociationsController">
+  <form class="" name='form' method="post">
+    Player:<select class="aselect" name="" ng-model="newrelation.playerid">
+      <option ng-repeat="player in dropdownplayers" value={{player.id}}>{{player.firstname}}&nbsp{{player.lastname}}</option>
+    </select>
+    Team:<select class="aselect" name="" ng-model="newrelation.teamid">
+      <option ng-repeat="team in teams" value={{team.id}}>{{team.name}}</option>
+    </select>
+    <button id='assignbutton' type="button" name="button" ng-click="add()" ng-Disabled="checkInput()">Assign Player to Team</button><br><br>
+    <table>
+      <tr>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Team</th>
+        <th>Actions</th>
+      </tr>
+      <tr ng-repeat="player in tableplayers ">
+        <!-- <div ng-if="typeof(player.team)!='undefined' && player.team !='' "> -->
+          <td>{{player.firstname}}</td>
+          <td>{{player.lastname}}</td>
+          <td>{{player.team.name}}</td>
+          <td><button type="button" name="button" ng-click=delete(player.id)>Clear Assignment</button></td>
+        <!-- </div> -->
+      </tr>
+    </table>
+</fieldset>

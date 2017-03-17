@@ -1,0 +1,17 @@
+<fieldset name='fieldset'  ng-controller="TeamsController">
+  <form class="" name='form' method="post">
+    <label for="">Name</label>
+    <input type="text" name="" value="" ng-model="newteam.name"><br><br>
+    <button id='addbutton' type="button" name="button" ng-click="add()" ng-Disabled="checkInput()">Add Team</button><br><br>
+    <table>
+      <tr>
+        <th>Name</th>
+        <th>Actions</th>
+      </tr>
+      <tr ng-repeat="team in teams ">
+        <!-- <td>{{$index}}</td> -->
+        <td>{{team.name}}</td>
+        <td><button type="button" name="button" ng-click=delete(team)>Reomve Team</button></td>
+      </tr>
+    </table>
+</fieldset>
