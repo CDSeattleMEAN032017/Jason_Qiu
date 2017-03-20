@@ -1,0 +1,13 @@
+<fieldset name='fieldset'  ng-controller="FriendsController">
+  <p class="errormessage">{{errormessage}}</p>
+  <div class="" ng-if="friend">
+    <h3>Firstname:&nbsp{{friend.firstname}}</h3>
+    <h3>Lastname:&nbsp{{friend.lastname}}</h3>
+    <h3>Birthday:&nbsp{{friend.birthdaystr}}</h3>
+    <a href="#!/friends/{{friend._id}}/edit">Edit</a>&nbsp|&nbsp
+    <a href="#!friends">Back Home</a>
+  </div>
+  <div class="" ng-if="!friend">
+     <h3>This friend do not exist!</h3>
+  </div>
+</fieldset>

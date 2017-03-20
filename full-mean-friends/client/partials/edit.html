@@ -1,0 +1,17 @@
+<fieldset name='fieldset'  ng-controller="FriendsController">
+  <p class="errormessage">{{errormessage}}</p>
+  <form class="" name='form' method="post" ng-if="friend">
+    <!-- {{friend}} -->
+    <label for="">First Name</label>
+    <input type="text" name="" value=friend.firstname ng-model="friend.firstname"><br><br>
+    <label for="">Last Name</label>
+    <input type="text" name="" value="friend.lastname" ng-model="friend.lastname"><br><br>
+    <label for="">birthday</label>
+    <input type="Date" name="" value="friend.birthday" ng-model="friend.birthday"><br><br>
+    <button id='addbutton' type="button" name="button" ng-click="update()" ng-Disabled="checkUpdateInput()">Update</button><br><br>
+    <a href="#!friends">Back Home</a>
+  </form>
+  <div class="" ng-if="!friend">
+     <h1>This friend do not exist!</h1>
+  </div>
+</fieldset>

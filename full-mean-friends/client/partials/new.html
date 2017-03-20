@@ -1,0 +1,13 @@
+<fieldset name='fieldset'  ng-controller="FriendsController">
+  <p class="errormessage">{{errormessage}}</p>
+  <form class="" name='form' method="post">
+    <label for="">First Name</label>
+    <input type="text" name="" value="" ng-model="newfriend.firstname"><br><br>
+    <label for="">Last Name</label>
+    <input type="text" name="" value="" ng-model="newfriend.lastname"><br><br>
+    <label for="">birthday</label>
+    <input type="Date" name="" value="" ng-model="newfriend.birthday"><br><br>
+    <button id='addbutton' type="button" name="button" ng-click="create()" ng-Disabled="checkCreateInput()">Create</button><br><br>
+    <a href="#!friends">Back Home</a>
+  </form>
+</fieldset>

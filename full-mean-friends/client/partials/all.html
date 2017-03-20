@@ -1,0 +1,24 @@
+<fieldset name='fieldset'  ng-controller="FriendsController">
+    <p class="errormessage">{{errormessage}}</p>
+  <table>
+    <tr>
+      <th>First Name</th>
+      <th>Last Name</th>
+      <th>Birthday</th>
+      <th>Actions</th>
+    </tr>
+    <tr ng-repeat="friend in friends ">
+      <td>{{friend.firstname}}</td>
+      <td>{{friend.lastname}}</td>
+      <td>{{friend.birthday}}</td>
+      <td>
+        <a href="#!/friends/{{friend._id}}">Show</a>&nbsp|
+        <a href="#!/friends/{{friend._id}}/edit">Edit</a>&nbsp|
+        <a href ng-click=delete(friend._id)>Delete</a></td>
+    </tr>
+  </table>
+<br><br><br><br>
+<form class="" ng-submit='new()'>
+  <input type="submit" name="" value="New Friend">
+</form>
+</fieldset>
