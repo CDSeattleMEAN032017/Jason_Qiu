@@ -11,9 +11,16 @@
     color: red;
     font-size: 10pt;
     font-weight: bold;
-    display: inline-block;
+    /*display: inline-block;
     position: relative;
-    left: 15%;
+    left: 5%;*/
+    margin: 0;
+  }
+  .errdiv{
+    position: relative;
+    left: 35%;
+    text-align: left;
+    width: 60%;
   }
   fieldset{
     display: inline-block;

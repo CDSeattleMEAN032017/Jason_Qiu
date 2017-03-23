@@ -1,22 +1,9 @@
 var mongoose = require('mongoose');
 var User = mongoose.model('User');
+var bcrypt = require('bcrypt')
+var session = require('express-session')
 
 module.exports={
-  profile:function(req, res) {
-    var userid=req.params.userid
-    console.log(id);
-    var context={error:"",user:""}
-    User.findById(uerid, function(err, user) {
-      if(err) {
-        console.log('something went wrong 1');
-        context.error={info:"backend error!"}
-      } else {
-        console.log('successfully get user!');
-        context.user=user
-      }
-      res.json(context);
-    })
-  },
   // registers Request
   register:function(req, res) {
     console.log("POST DATA", req.body);
@@ -27,19 +14,39 @@ module.exports={
       password: req.body.password,
       passwordConfirmation: req.body.passwordConfirmation,
       birthday: req.body.birthday});
-    console.log(user);
+    // console.log(user);
     user.save(function(err,userobj) {
       context={}
       info={}
       if(err) {
-        //console.log(user.errors);
-        // if ('firstname' in user.errors){
-        //   info.firstname=user.errors.firstname.message
-        // }
-        console.log(info);
-        context.info=user.errors
+        if(user.errors){
+          if ('first_name' in user.errors){
+            info.first_name=user.errors.first_name.message
+          }
+          if ('last_name' in user.errors){
+            info.last_name=user.errors.last_name.message
+          }
+          if ('email' in user.errors){
+            info.email=user.errors.email.message
+          }
+          if ('passwordHash' in user.errors){
+            info.password=user.errors.passwordHash.message
+          }
+          if ('birthday' in user.errors){
+            info.birthday=user.errors.birthday.message
+          }
+          context.info=info
+        }
+        else{
+          if(err.message.indexOf('duplicate key error')>-1){
+            info.email='the email address has existed!'
+            context.info=info
+          }
+        }
       } else {
-        info='successfully add a user!'
+        req.session.user=userobj
+        req.session.save()
+        info='successfully registration!'
         context.info=info
         context.user=userobj
         console.log(userobj);
@@ -48,39 +55,48 @@ module.exports={
     })
   },
   // Login Request
-  // login:function(req, res) {
-  //   console.log("POST DATA", req.body);
-  //   var email= req.body.email
-  //   var password=req.body.password,
-  //   User.findOne({email:email},function(err,user) {
-  //     context={}
-  //     info={}
-  //     if(err) {
-  //       console.log(err);
-  //       context.info=User.errors
-  //     } else {
-  //       info='successfully add a user!'
-  //       context.info=info
-  //       context.user=user
-  //     }
-  //     res.json(context)
-  //   })
-  // },
-
-  //delete an user
+  login:function(req, res) {
+    console.log("POST DATA", req.body);
+    var email= req.body.email
+    var password=req.body.password
+    User.findOne({email:email}).exec(function(err,user) {
+      context={}
+      info={}
+      if(err) {
+        // console.log(err);
+        context.info=User.errors
+      } else {
+        // console.log(user);
+        if(!user){
+          info.lemail='email address does not exist!'
+          context.info=info
+        } else if(bcrypt.compareSync(password, user.passwordHash)){
+          info='successfully login!'
+          req.session.user=user
+          req.session.save()
+          context.info=info
+          context.user=user
+        } else {
+          info.lpassword='invalid password'
+          context.info=info
+        }
+      }
+      console.log(context);
+      res.json(context)
+    })
+  },
+  checkstatus:function(req,res){
+    if(req.session.user){
+      res.json(req.session.user)
+    } else {
+      res.json(null)
+    }
+  },
+  //logout request
   logout:function(req, res) {
-    // var id=req.params.id
-    // var backURL=req.header('Referer') || '/';
-    // User.findByIdAndRemove(id,function(err) {
-    //   context={}
-    //   if(err) {
-    //     console.log('something went wrong 5');
-    //     context.errors=User.errors
-    //   } else { // else console.log that we did well and then redirect to the root route
-    //     console.log('successfully delete a user!');
-    //     context.info='successfully delete a user!'
-    //   }
-    //   res.json(context)
-    // })
-  }
+    req.session.destroy()
+    res.json({info:'successfully logout'})
+    // res.redirect('/')
+  },
+
 }

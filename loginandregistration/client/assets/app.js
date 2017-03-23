@@ -12,16 +12,34 @@ $routeProvider
     redirectTo: '/'
   });
 });
-app.factory('userFactory',['$http', function($http){
+app.factory('userFactory',['$http','$location', function($http,$location){
    var factory = {};
+   var userobj=null
+   factory.getuser=function(){
+     return userobj;
+   }
+   factory.setuser=function(){
+     userobj=null
+   }
+   factory.checkstatus=function(callback){
+     $http.get('/checkstatus').then(
+       function(res){
+         if(!res.data){
+           userobj=null
+           $location.url('/')
+         } else {
+           userobj=res.data
+         }
+       }
+     )
+   }
    factory.register = function(newuser,callback){
      $http.post('/register',newuser).then(
        function(res){
-         console.log(res);
+         userobj=res.data.user
          callback(res.data)
        },
        function(res){
-         console.log(res);
          callback(res.data)
        }
      )
@@ -29,6 +47,17 @@ app.factory('userFactory',['$http', function($http){
    factory.login = function(user,callback){
      $http.post('/login',user).then(
        function(res){
+         userobj=res.data.user
+         callback(res.data)
+       },
+       function(res){
+         callback(res.data)
+       }
+     )
+   }
+   factory.logout = function(callback){
+     $http.get('/logout').then(
+       function(res){
          console.log(res);
          callback(res.data)
        },
@@ -38,30 +67,6 @@ app.factory('userFactory',['$http', function($http){
        }
      )
    }
-   factory.logout = function(user,callback){
-     $http.post('logout',user).then(
-       function(res){
-         console.log(res);
-         callback(res.data)
-       },
-       function(response){
-         console.log(response);
-         callback(res.data)
-       }
-     )
-   }
-  //  factory.profile=function (userid,callback){
-  //    url='/users/'+userid
-  //    $http.get(url).then(
-  //      function(response){
-  //        factory.user=response.data.user
-  //        callback(factory.user)
-  //      },
-  //      function(response){
-  //        console.log(response);
-  //      }
-  //    )
-  //  }
   //  factory.checkInput=function(newuser){
   //   //  console.log(newuser);
   //     if(typeof(newuser)==='undefined'){
@@ -78,87 +83,69 @@ app.factory('userFactory',['$http', function($http){
 }])
 
 app.controller('UsersController',['$scope','userFactory','$location','$routeParams','$cookies',function ($scope,userFactory,$location,$routeParams,$cookies) {
-  if($cookies.get('message')){
-      $scope.message=$cookies.get('message')
-      $cookies.remove('message')
-  }
   console.log("enter controller");
+  if($cookies.get('successmessage')){
+      $scope.successmessage=$cookies.get('successmessage')
+      $cookies.remove('successmessage')
+  }
+  userFactory.checkstatus()
+  if($routeParams){
+    if($routeParams.userid){
+      temp=userFactory.getuser()
+      if(temp){
+        if(temp._id==$routeParams.userid){
+          $scope.user=temp
+        }
+      }
+    }
+  }
+  console.log($location.path());
+  console.log(userFactory.getuser());
+  if(userFactory.getuser()&&$location.path()=='/'){
+    $location.url('/profile/'+userFactory.getuser()._id)
+  }
   $scope.register=function(){
     userFactory.register($scope.newuser,function (data){
       if(data.user){
-        $scope.user = data.user;
         $scope.newuser={}
-        $cookies.put('message', data.info)
-        url='/profile/'+$scope.user._id
+        $cookies.put('successmessage', data.info)
+        url='/profile/'+data.user._id
         $location.url(url)
         }
         else {
-          console.log(data.info);
-          $scope.message=''
-          for(key in data.info){
-            // console.log(key);
-            $scope.message+=data.info[key] +'  '
-          }
-          console.log($scope.message)
+          // console.log(data.info);
+          $scope.message=data.info
         }
       })
   };
   $scope.login=function(){
-    userFactory.login($scope.user,function (data){
+    userFactory.login($scope.loginuser,function (data){
       if(data.user){
-        $scope.user = data.user;
-        $cookies.put('message', data.info)
-        url='/profile/'+$scope.user._id
+        $scope.loginuser={}
+        $cookies.put('successmessage', data.info)
+        url='/profile/'+data.user._id
         $location.url(url)
         }
         else {
-          console.log(data.info);
-          $scope.message=''
-          for(key in data.info){
-            console.log(key);
-            $scope.message+=data.info[key] +'  '
-          }
-          console.log($scope.message)
+          // console.log(data.info);
+          $scope.message=data.info
+          // console.log($scope.message)
         }
     })
   };
   $scope.logout=function(){
-    userFactory.logout($scope.user,function (data){
+    userFactory.logout(function (data){
       if(data.info){
         $scope.user = {}
-        $cookies.put('message', data.info)
+        userFactory.setuser()
+        $cookies.put('successmessage', data.info)
         url='/'
         $location.url(url)
         }
         else {
-          $scope.message=''
-          for(key in data.errors){
-            console.log(key);
-            $scope.message+=data.errors[key] +'  '
-          }
+          $scope.message=data.errors
           console.log($scope.message)
         }
       })
   };
-  // $scope.profile=function(userid){
-  //   userFactory.show(userid,function (data){
-  //       $scope.user = data;
-  //       console.log($scope.user);
-  //     });
-  // };
-  // if($routeParams){
-  //   if($routeParams.userid){
-  //     $scope.userid=$routeParams.userid
-  //     $scope.profile($scope.userid)
-  //   }
-  // }
-  // $scope.checkCreateInput=function(){
-  //   return userFactory.checkInput($scope.newuser)
-  // }
-  // $scope.checkUpdateInput=function(){
-  //   return userFactory.checkInput($scope.user)
-  // }
-  // $scope.new=function(){
-  //   $location.url('/users/new')
-  // }
 }])

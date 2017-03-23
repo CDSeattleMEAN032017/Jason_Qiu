@@ -1,9 +1,5 @@
 <div class="" ng-controller="UsersController">
-    <!-- {% if messages %}
-      {% for message in messages %}
-        <p class='error'>{{message}}</p>
-      {% endfor %}
-    {% endif %} -->
+<p class="error" ng-if='successmessage'>{{successmessage}}</p>
   <h1>Welcome:&nbsp{{user.first_name}}</h1>
   <a href ng-click=logout(user._id)>Logout</a></br>
 <!-- with all the data we can then construct a more structured output -->
